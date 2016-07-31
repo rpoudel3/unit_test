@@ -22,7 +22,7 @@ def url_to_csv(url, fname):
         raise TypeError
     except pd.parser.CParserError:
         raise TypeError('URL Cannot be Parsed as CSV')
-    return (fname)
+    return os.getcwd(fname)
 
 #url_to_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer/breast-cancer-data','fname')
 
@@ -50,11 +50,11 @@ def url_to_df(url):
     """Takes a URL to a CSV file and returns the contents of the URL 
     as a Pandas DataFrame.
     """
-    u=urllib2.urlopen(url)
-    fname=open('f','w')
-    fname.write(u.read())
+    # u=urllib2.urlopen(url)
+    # fname=open('f','w')
+    # fname.write(u.read())
 
-    #data_frame=pd.read_csv(url)
+    data_frame=pd.read_csv(url, header=None)
     return data_frame
     
     

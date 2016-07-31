@@ -12,7 +12,7 @@ class TestURL(unittest.TestCase):
         url = "http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data"
         returned_fname = requester.url_to_csv(url, fname="test_fname.csv")
         self.assertIsInstance(returned_fname, str)
-        self.assertEqual(returned_fname, "test_fname.csv")
+        self.assertEqual(returned_fname, "/Users/rashmipoudel/desktop/Git/unit_test/test_fname.csv")
 
     def test_invalid_url(self):
         invalid_url = "http://golakjsd.com/jl2kais"
@@ -21,13 +21,13 @@ class TestURL(unittest.TestCase):
 
     def test_valid_csv(self):
         url="http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data"
-        readerobject=requester.url_to_csv(url, fname='/Users/rashmipoudel/Downloads/fname.csv')
+        readerobject=requester.url_to_csv(url, fname='fname.csv')
         self.assertTrue(str(type(readerobject)),"_csv.reader")
 
     def test_invalid_csv(self):
         url="http://stackoverflow.com/questions/17730173/python-cant-get-full-path-name-of-file"
         with self.assertRaises(TypeError):
-            requester.url_to_csv(url,'tester.csv')
+            requester.url_to_csv(url,'/Users/rashmipoudel/desktop/Git/unit_test/tester.csv')
 
 
 class Test_batch_URL_csv(unittest.TestCase):
@@ -38,7 +38,9 @@ class Test_batch_URL_csv(unittest.TestCase):
                 "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer/breast-cancer-data",
                "http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv"]
         returned_fname = requester.batch_url_to_csv(url, fnames=["test", "test2","test3"])
-        self.assertEqual(returned_fname, ["test","test2","test3"])
+        self.assertEqual(returned_fname, ["/Users/rashmipoudel/desktop/Git/unit_test/test",
+                                          "/Users/rashmipoudel/desktop/Git/unit_test/test2",
+                                          "/Users/rashmipoudel/desktop/Git/unit_test/test3"])
 
     def test_number_of_files(self):
         #unittest no.4
@@ -46,7 +48,9 @@ class Test_batch_URL_csv(unittest.TestCase):
                 "http://golakjsd.com/jl2kais",
                "http://stackoverflow.com/questions/17730173/python-cant-get-full-path-name-of-file"]
 
-         returned_fname=requester.batch_url_to_csv(url, fnames=["test_fname.csv", "test2_fname.csv","test3_fname.csv"])
+         returned_fname=requester.batch_url_to_csv(url, fnames=["test_fname.csv",
+                                                                "test2_fname.csv",
+                                                                "test3_fname.csv"])
          number_files=len(returned_fname)
          self.assertEqual(number_files, 1)
 
@@ -55,8 +59,10 @@ class Test_batch_URL_csv(unittest.TestCase):
         url = ["https://docs.travis-ci.com/user/languages/python",
                 "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer/breast-cancer-data",
                "http://google.com/student"]
-        returned_fname=requester.batch_url_to_csv(url,fnames=['t1','t2','t3'])
-        self.assertEqual(returned_fname,['t2'])
+        returned_fname=requester.batch_url_to_csv(url,fnames=['t1',
+                                                              't2',
+                                                              't3'])
+        self.assertEqual(returned_fname,['/Users/rashmipoudel/desktop/Git/unit_test/t2'])
 
     def test_correct_number_of_filenames(self):
         #unittest no.7
@@ -64,7 +70,9 @@ class Test_batch_URL_csv(unittest.TestCase):
                 "https://github.com/pydata/pandas/issues/10153",
                "http://stackoverflow.com/questions/17730173/python-cant-get-full-path-name-of-file"]
 
-        returned_fname=requester.batch_url_to_csv(url, fnames=["test_fname.csv", "test2_fname.csv","test3_fname.csv"])
+        returned_fname=requester.batch_url_to_csv(url, fnames=["test_fname.csv",
+                                                               "test2_fname.csv",
+                                                               "test3_fname.csv"])
         number_files=len(returned_fname)
         self.assertEqual(number_files, 0)
 
@@ -74,7 +82,7 @@ class Test_batch_URL_csv(unittest.TestCase):
                 "https://github.com/pydata/pandas/issues/10153",
                "https://github.com/pydata/pandas/issues/10153"]
         with self.assertRaises(AssertionError):
-            requester.batch_url_to_csv(url,fnames=['/Users/rashmipoudel/travis','Users/rashmipoudel/travis2','Users/rashmipoudel/travis3'])
+            requester.batch_url_to_csv(url,fnames=['travis','travis2','travis3'])
 
 class TestURL_df(unittest.TestCase):
     def test_dataframe(self):

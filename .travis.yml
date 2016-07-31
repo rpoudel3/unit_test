@@ -1,19 +1,11 @@
-language:python
--"2.7"
-<<<<<<< HEAD
+language: python
+python:
+  - "2.7"
+
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libxml2-dev
-=======
-language: ruby
-rvm:
-- 1.9.3
-- 2.0.0
-- 2.1.2
-before_install:
-  - sudo apt-get -qq update
-  
->>>>>>> ca3aec576eafe93bf7aab1541b50eb7597a1b20c
-install: "pip install -r requirements.txt"
-# command to run tests
-script: python -m unittest discover
+ - sudo apt-get -qq update
+
+install:
+  - pip install -r requirements.txt
+script:
+  - python -m unittest discover

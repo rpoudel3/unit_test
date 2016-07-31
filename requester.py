@@ -2,7 +2,6 @@ import urllib2
 import csv
 import sys
 import pandas as pd
-import requests
 from io import StringIO
 import warnings
 import os

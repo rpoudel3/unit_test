@@ -35,69 +35,77 @@ class TestURL(unittest.TestCase):
 class Test_batch_URL_csv(unittest.TestCase):
     def test_valid_url(self):
 
-         #emits a runtime warning indicating that the invalid URL was skipped.
+         #emits a runtime warning indicating that the invalid CSV URL or URL that cannot be accessed was skipped.
         url = ["http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data",
-                "http://golakjsd.com/jl2kais",
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer/breast-cancer-data",
                "http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv"]
-        returned_fname = requester.batch_url_to_csv(url, fnames=["test_fname.csv", "test2_fname.csv","test3_fname.csv"])
-        self.assertEqual(returned_fname, ["test_fname.csv","test3_fname.csv"])
+        returned_fname = requester.batch_url_to_csv(url, fnames=["test", "test2","test3"])
+        self.assertEqual(returned_fname, ["test","test2","test3"])
 
     def test_number_of_files(self):
+        #unittest no.4
          url = ["http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data",
                 "http://golakjsd.com/jl2kais",
-               "http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv"]
+               "http://stackoverflow.com/questions/17730173/python-cant-get-full-path-name-of-file"]
+
          returned_fname=requester.batch_url_to_csv(url, fnames=["test_fname.csv", "test2_fname.csv","test3_fname.csv"])
          number_files=len(returned_fname)
-         self.assertEqual(number_files, 2)
+         self.assertEqual(number_files, 1)
 
-    #def test_correct_filenames(self):
+    def test_correct_filenames(self):
+        #unittest no.6
+        url = ["https://docs.travis-ci.com/user/languages/python",
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer/breast-cancer-data",
+               "http://google.com/student"]
+        returned_fname=requester.batch_url_to_csv(url,fnames=['t1','t2','t3'])
+        self.assertEqual(returned_fname,['t2'])
+
+    def test_correct_number_of_filenames(self):
+        #unittest no.7
+        url = ["https://docs.travis-ci.com/user/languages/python",
+                "https://github.com/pydata/pandas/issues/10153",
+               "http://stackoverflow.com/questions/17730173/python-cant-get-full-path-name-of-file"]
+
+        returned_fname=requester.batch_url_to_csv(url, fnames=["test_fname.csv", "test2_fname.csv","test3_fname.csv"])
+        number_files=len(returned_fname)
+        self.assertEqual(number_files, 0)
+
+    def test_duplicate_URLS(self):
+        #unittest no.8
+        url = ["https://docs.travis-ci.com/user/languages/python",
+                "https://github.com/pydata/pandas/issues/10153",
+               "https://github.com/pydata/pandas/issues/10153"]
+        with self.assertRaises(AssertionError):
+            requester.batch_url_to_csv(url,fnames=['travis','travis2','travis3'])
+
+class TestURL_df(unittest.TestCase):
+    def test_dataframe(self):
+        """Ensure url_to_df( ) returns a Pandas DataFrame object"""
+
+        url="http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data"
+        readerobject=requester.url_to_df(url)
+        self.assertIsInstance(readerobject,pd.DataFrame)
+
+    def test_number_of_rows(self):
+        url="http://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data"
+        reader=requester.url_to_df(url)
+        print reader
+        rows,columns=reader.shape
+        print rows
+        #print number_of_rows
+        #self.assertEqual(number_of_rows,1728)
 
 
-    # def test_valid_batch_files(self):
-    #     # ensures that the batch_url_to_csv generates the same number
-    #     url = ["http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data",
-    #             "http://golakjsd.com/jl2kais",
-    #            "http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv"]
-    #
-    #     returned_fname = requester.batch_url_to_csv(url, fnames=["test_fname.csv", "test2_fname.csv","test3_fname.csv"])
-    #     #self.assertIsInstance(returned_fname, str)
-    #     self.assertEqual(returned_fname, ["test_fname.csv","test3_fname.csv"])
+    # def test_dataframe_rows(self):
+    # Ensure the number of rows in the Pandas DataFrame returned
+    # by url_to_df( ) matches the number of rows in the CSV when there is no header row in the CSV
+
+        #  url="http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data"
+        #
+        # readerobject=requester.url_to_df(url)
+        # a=len(readerobject.index)
 
 
-
-    # def test_invalid_url(self):
-    #     invalid_url = "http://golakjsd.com/jl2kais"
-    #     with self.assertRaises(ValueError):
-    #         requester.url_to_csv(invalid_url)
-    #
-    # def test_valid_csv(self):
-    #     url="http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data",
-    #     readerobject=requester.url_to_csv(url, fname='/Users/rashmipoudel/Downloads/fname.csv')
-    #     self.assertTrue(str(type(readerobject)),"_csv.reader")
-    #
-
-
-
-
-# class TestURL_df(unittest.TestCase):
-#     def test_dataframe(self):
-#         """Ensure url_to_df( ) returns a Pandas DataFrame object"""
-#
-#         url="http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data"
-#         readerobject=requester.url_to_df(url)
-#         self.assertIsInstance(readerobject,pd.DataFrame)
-#
-#     # def test_dataframe_rows(self):
-    # # Ensure the number of rows in the Pandas DataFrame returned
-    # # by url_to_df( ) matches the number of rows in the CSV when there is no header row in the CSV
-    #
-    #      url="http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data"
-    #
-    #     readerobject=requester.url_to_df(url)
-    #     a=len(readerobject.index)
-    #
-    #
-    #     self.assertEqual(a)
 
 
 

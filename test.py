@@ -1,11 +1,13 @@
 import requester
 import unittest
 import pandas as pd
+import os
 
 
 
 
 class TestURL(unittest.TestCase):
+    os.getcwd()
 
     def test_valid_url(self):
         # test to see if the url passed in is valid.

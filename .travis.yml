@@ -1,8 +1,11 @@
-language:python
--"2.7"
+language: python
+python:
+  - "2.7"
+
 before_install:
-  - sudo apt-get -qq update
-  
-install: "pip install -r requirements.txt"
-# command to run tests
-script: python -m unittest discover
+ - sudo apt-get -qq update
+
+install:
+  - pip install -r src/requirements.txt
+script:
+  - python -m unittest discover

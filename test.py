@@ -112,9 +112,9 @@ class TestURL_df(unittest.TestCase):
         url="http://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data"
         #url="http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv"
         reader=requester.url_to_df(url)
-        print reader
+        #print reader
         rows,columns=reader.shape
-        print list(reader.columns.values)
+        #print list(reader.columns.values)
         self.assertEqual(rows,1728)
 
     # def test_dataframe_rows(self):

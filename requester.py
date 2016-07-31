@@ -22,7 +22,8 @@ def url_to_csv(url, fname):
         raise TypeError
     except pd.parser.CParserError:
         raise TypeError('URL Cannot be Parsed as CSV')
-    return os.getcwd(fname)
+    os.getcwd()
+    return fname
 
 #url_to_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer/breast-cancer-data','fname')
 

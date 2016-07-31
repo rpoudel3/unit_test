@@ -99,7 +99,7 @@ class TestURL_df(unittest.TestCase):
         print reader
         rows,columns=reader.shape
         print list(reader.columns.values)
-        self.assertEqual(rows,517)
+        self.assertEqual(rows,1728)
 
     # def test_dataframe_rows(self):
     # Ensure the number of rows in the Pandas DataFrame returned

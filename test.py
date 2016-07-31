@@ -1,6 +1,4 @@
-import numpy as np
 import requester
-import requests
 import unittest
 import pandas as pd
 
@@ -76,7 +74,7 @@ class Test_batch_URL_csv(unittest.TestCase):
                 "https://github.com/pydata/pandas/issues/10153",
                "https://github.com/pydata/pandas/issues/10153"]
         with self.assertRaises(AssertionError):
-            requester.batch_url_to_csv(url,fnames=['travis','travis2','travis3'])
+            requester.batch_url_to_csv(url,fnames=['/Users/rashmipoudel/travis','Users/rashmipoudel/travis2','Users/rashmipoudel/travis3'])
 
 class TestURL_df(unittest.TestCase):
     def test_dataframe(self):
@@ -88,13 +86,12 @@ class TestURL_df(unittest.TestCase):
 
     def test_number_of_rows(self):
         url="http://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data"
+        #url="http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv"
         reader=requester.url_to_df(url)
         print reader
         rows,columns=reader.shape
-        print rows
-        #print number_of_rows
-        #self.assertEqual(number_of_rows,1728)
-
+        print list(reader.columns.values)
+        self.assertEqual(rows,517)
 
     # def test_dataframe_rows(self):
     # Ensure the number of rows in the Pandas DataFrame returned

@@ -14,8 +14,6 @@ def url_to_csv(url, fname):
     try:
         data = pd.read_csv(url)
         data.to_csv(fname)
-        #response=urllib2.urlopen(url)
-        #cr=csv.reader(response)
     except urllib2.URLError:
         raise ValueError('Invalid URL')
     except IOError:
@@ -42,8 +40,12 @@ def batch_url_to_csv(urls, fnames):
                     warnings.warn('RuntimeWarning,%s has been skipped' % (urls[i]))
             except ValueError:
                     warnings.warn('RuntimeWarning,%s has been skipped' % (urls[i]))
-                #skip=True
-                #continue
+    reader_list=[]
+    for i in range(len(list_of_files)):
+            reader_list.append(csv.reader(list_of_files[i],delimiter=','))
+    unique2=set(reader_list)
+    if len(unique2)!=len(list_of_files):
+        raise AssertionError("Urls have same content")
     return list_of_files
 
          

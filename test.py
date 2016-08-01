@@ -11,10 +11,11 @@ class TestURL(unittest.TestCase):
 
     def test_valid_url(self):
         # test to see if the url passed in is valid.
+        cwd=os.getcwd()
         url = "http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data"
         returned_fname = requester.url_to_csv(url, fname="test_fname.csv")
         self.assertIsInstance(returned_fname, str)
-        self.assertEqual(returned_fname, "test_fname.csv")
+        self.assertEqual(returned_fname, "{0}/{1}.csv".format(cwd,'test_fname.csv'))
 
     def test_invalid_url(self):
         # test to see if the url passed in is invalid.
@@ -108,14 +109,20 @@ class TestURL_df(unittest.TestCase):
         readerobject=requester.url_to_df(url)
         self.assertIsInstance(readerobject,pd.DataFrame)
 
-    def test_number_of_rows(self):
+    def test_number_of_rows_without_header(self):
         url="http://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data"
-        #url="http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv"
+
         reader=requester.url_to_df(url)
-        #print reader
         rows,columns=reader.shape
-        #print list(reader.columns.values)
         self.assertEqual(rows,1728)
+
+    def test_number_of_rows_with_header(self):
+         url="http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv"
+
+         reader=requester.url_to_df(url)
+         rows,columns=reader.shape
+         self.assertEqual(rows,517)
+
 
     # def test_dataframe_rows(self):
     # Ensure the number of rows in the Pandas DataFrame returned

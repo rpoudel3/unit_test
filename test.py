@@ -2,6 +2,8 @@ import requester
 import unittest
 import pandas as pd
 import os
+import warnings
+import csv
 
 
 
@@ -49,12 +51,13 @@ class Test_batch_URL_csv(unittest.TestCase):
 
         cwd=os.getcwd()
         url = ["http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data",
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer/breast-cancer-data",
+                "http://stackoverflow.com/questions/17730173/python-cant-get-full-path-name-of-file",
                "http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv"]
+        #with warnings.warn('RuntimeWarning'):
+        #    requester.batch_url_to_csv(url, fnames=["test", "test2","test3"])
         returned_fname = requester.batch_url_to_csv(url, fnames=["test", "test2","test3"])
         self.assertEqual(returned_fname, ["{0}/{1}.csv".format(cwd,"test"),
-                                          "{0}/{1}.csv".format(cwd,"test2"),
-                                          "{0}/{1}.csv".format(cwd,"test3")])
+                                           "{0}/{1}.csv".format(cwd,"test3")])
 
     def test_number_of_files(self):
 
@@ -65,9 +68,9 @@ class Test_batch_URL_csv(unittest.TestCase):
                 "http://golakjsd.com/jl2kais",
                "http://stackoverflow.com/questions/17730173/python-cant-get-full-path-name-of-file"]
 
-        returned_fname=requester.batch_url_to_csv(url, fnames=["test_fname.csv",
-                                                                "test2_fname.csv",
-                                                                "test3_fname.csv"])
+        returned_fname=requester.batch_url_to_csv(url, fnames=["test_fname",
+                                                                "test2_fname",
+                                                                "test3_fname"])
         number_files=len(returned_fname)
         self.assertEqual(number_files, 1)
 
@@ -77,10 +80,22 @@ class Test_batch_URL_csv(unittest.TestCase):
 
         url=["http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data",
              "http://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data",
-             "http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data"]
+             "http://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"]
         cwd=os.getcwd()
-        with self.assertRaises(AssertionError):
-            requester.batch_url_to_csv(url,fnames=['{0}/{1}.csv'.format(cwd,'m1'),'{0}/{1}.csv'.format(cwd,'m2'),'{0}/{1}.csv'.format(cwd,'m3')])
+        list_of_files=requester.batch_url_to_csv(url, fnames=["m1", "m2","m3"])
+        total_rows=0
+        reader_list=[]
+        for j in range(len(list_of_files)):
+                reader=csv.DictReader(list_of_files[j])
+        for rows in reader:
+                total_rows+=1
+        reader_list.append(total_rows)
+
+        unique=set((reader_list))
+        if len(unique)!=len(reader_list):
+            with self.assertRaises(AssertionError):
+                requester.batch_url_to_csv(url,fnames=['m1','m2','m3'])
+
 
     def test_correct_filenames(self):
 
@@ -100,9 +115,9 @@ class Test_batch_URL_csv(unittest.TestCase):
                 "https://github.com/pydata/pandas/issues/10153",
                "http://stackoverflow.com/questions/17730173/python-cant-get-full-path-name-of-file"]
 
-        returned_fname=requester.batch_url_to_csv(url, fnames=["test_fname.csv",
-                                                               "test2_fname.csv",
-                                                               "test3_fname.csv"])
+        returned_fname=requester.batch_url_to_csv(url, fnames=["test_fname1",
+                                                               "test2_fname2",
+                                                               "test3_fname3"])
         number_files=len(returned_fname)
         self.assertEqual(number_files, 0)
 
@@ -135,11 +150,11 @@ class TestURL_df(unittest.TestCase):
     def test_number_of_rows_with_header(self):
         """Ensure the number of rows in the Pandas DataFrame returned by url_to_df( ) matches
         the number of rows in the CSV when there is a header row in the CSV """
-         url="http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv"
+        url="http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv"
 
-         reader=requester.url_to_df(url)
-         rows,columns=reader.shape
-         self.assertEqual(rows,517)
+        reader=requester.url_to_df(url)
+        rows,columns=reader.shape
+        self.assertEqual(rows,517)
 
 
 

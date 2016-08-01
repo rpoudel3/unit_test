@@ -49,7 +49,6 @@ def batch_url_to_csv(urls, fnames):
     return list_of_files
 
 
-
 def url_to_df(url):
     """Takes a URL to a CSV file and returns the contents of the URL 
     as a Pandas DataFrame.
@@ -58,11 +57,19 @@ def url_to_df(url):
 
     f1=open('fname5.csv','wb')
     f1.write(u.read())
-    with open('fname5.csv','rb') as csvfile:
-            if csv.Sniffer().has_header(csvfile.read(2048)):
-                data_frame=pd.read_csv(url, header=0)
-            else:
-               data_frame=pd.read_csv(url, header=None)
+    try:
+        pd.read_csv(url)
+        with open(os.path.abspath('fname5.csv'),'rb') as csvfile:
+                if csv.Sniffer().has_header(csvfile.read(2048)):
+                    data_frame=pd.read_csv(url, header=0)
+                else:
+                    data_frame=pd.read_csv(url, header=None)
+    except urllib2.URLError:
+                 raise ValueError('Invalid URL')
+    except IOError:
+                 raise TypeError
+    except pd.parser.CParserError:
+                 raise TypeError('URL Cannot be Parsed as CSV')
     return data_frame
 
 
